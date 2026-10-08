@@ -1,0 +1,53 @@
+[project]
+name = "lsc-signllm"
+version = "0.1.0"
+description = "Traducción LSC <-> español: landmarks MediaPipe + proyector MoE/Perceiver + LLM"
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+  "numpy<2",
+  "torch>=2.3",
+  "opencv-python-headless<4.11",
+  "mediapipe==0.10.11",
+  "pandas",
+  "tqdm",
+  "requests",
+  "matplotlib",
+  "seaborn",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.uv]
+package = false
+# mediapipe trae opencv-contrib-python (necesita libGL / pantalla).
+# En servidor y CI usamos solo opencv-python-headless, que provee el mismo cv2.
+override-dependencies = ["opencv-contrib-python ; sys_platform == 'never'"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "network: descarga modelos/datos (corre en CI)",
+  "slow: tarda más de ~10 s",
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["notebooks", "scratch"]
+
+[tool.ruff.lint]
+# Por ahora solo errores graves (sintaxis, nombres indefinidos). Se endurece en una feature.
+select = ["E9", "F63", "F7", "F82"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/realtime_capture.py" = ["F821"]  # usa el patrón `"out" in locals()`
