@@ -1,0 +1,10 @@
+opencv-python
+mediapipe
+numpy
+pandas
+tqdm
+requests
+matplotlib
+seaborn
+torch
+torchvision

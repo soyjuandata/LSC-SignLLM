@@ -35,7 +35,7 @@ env.bak/
 venv.bak/
 
 # Data files and model checkpoints (CRITICAL: avoid uploading large weights/datasets to git)
-data/
+/data/
 *.zip
 *.tar.gz
 *.gz
